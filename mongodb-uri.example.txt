@@ -1,0 +1,1 @@
+mongodb+srv://YOUR_USER:YOUR_PASSWORD@cluster0.xxxxx.mongodb.net/gsr_homeocare_db?retryWrites=true&w=majority

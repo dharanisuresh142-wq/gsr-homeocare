@@ -13,6 +13,9 @@ oracleJdk-*/
 .idea/
 *.iml
 
+# Secrets (local MongoDB connection)
+mongodb-uri.txt
+
 # OS
 .DS_Store
 Thumbs.db

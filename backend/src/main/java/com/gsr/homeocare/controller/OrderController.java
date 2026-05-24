@@ -1,5 +1,6 @@
 package com.gsr.homeocare.controller;
 
+import com.gsr.homeocare.dto.OrderCreateRequest;
 import com.gsr.homeocare.model.Order;
 import com.gsr.homeocare.model.OrderStatus;
 import com.gsr.homeocare.service.OrderService;
@@ -13,8 +14,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -28,14 +31,22 @@ public class OrderController {
         this.orderService = orderService;
     }
 
+    @GetMapping
+    public ResponseEntity<List<Order>> getOrders(@RequestParam(required = false) String phone) {
+        if (phone != null && !phone.isBlank()) {
+            return ResponseEntity.ok(orderService.getOrdersByPhone(phone));
+        }
+        return ResponseEntity.ok(orderService.getAllOrders());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Order> getOrderById(@PathVariable String id) {
         return ResponseEntity.ok(orderService.getOrderById(id));
     }
 
     @PostMapping
-    public ResponseEntity<Order> createOrder(@Valid @RequestBody Order order) {
-        Order saved = orderService.createOrder(order);
+    public ResponseEntity<Order> createOrder(@Valid @RequestBody OrderCreateRequest request) {
+        Order saved = orderService.createOrder(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 

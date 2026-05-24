@@ -1,0 +1,8 @@
+package com.gsr.homeocare.exception;
+
+public class UnauthorizedException extends RuntimeException {
+
+    public UnauthorizedException(String message) {
+        super(message);
+    }
+}
