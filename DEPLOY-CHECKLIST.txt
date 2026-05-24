@@ -1,0 +1,37 @@
+# Deploy checklist — tick as you go
+
+## Step 1 — MongoDB Atlas
+- [ ] Account created
+- [ ] Cluster created (free M0)
+- [ ] Database user + password saved
+- [ ] Network: Allow 0.0.0.0/0
+- [ ] Connection string saved (with `/gsr_homeocare_db`)
+
+## Step 2 — GitHub
+- [ ] Repo created: `gsr-homeocare`
+- [ ] Uploaded: backend, frontend, database, render.yaml, netlify.toml
+- [ ] Did NOT upload: tools, oracleJdk-26, backend/target
+
+## Step 3 — Render
+- [ ] Signed up with GitHub
+- [ ] Blueprint deployed from repo
+- [ ] MONGODB_URI environment variable set
+- [ ] Health check works: /api/health shows UP
+
+## Step 4 — Netlify
+- [ ] Site linked to GitHub repo
+- [ ] Publish directory = `frontend`
+- [ ] Site deployed successfully
+- [ ] Site renamed to gsr-homeocare (optional)
+- [ ] Website opens on phone
+
+## Step 5 — Test
+- [ ] Products page loads
+- [ ] Consultation form submits
+- [ ] Admin shows consultations
+
+## Your links (fill in after deploy)
+
+- Netlify website: https://________________.netlify.app
+- Render API: https://________________.onrender.com
+- MongoDB org ID: 6a126d53e091a2b24b63a82c

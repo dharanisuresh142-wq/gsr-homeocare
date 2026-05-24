@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: gsr-homeocare-api
+    runtime: docker
+    plan: free
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    healthCheckPath: /api/health
+    envVars:
+      - key: MONGODB_URI
+        sync: false
+      - key: APP_MONGODB_ORGANIZATION_ID
+        value: 6a126d53e091a2b24b63a82c
+      - key: JAVA_TOOL_OPTIONS
+        value: -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0

@@ -1,0 +1,8 @@
+# Default profile is H2 (embedded database). Copy settings to application.properties if needed.
+
+spring.application.name=GSR Homeocare System
+server.port=8080
+spring.profiles.active=h2
+
+# For MySQL, use profile mysql and edit application-mysql.properties:
+# spring.profiles.active=mysql

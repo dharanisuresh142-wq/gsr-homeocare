@@ -1,0 +1,225 @@
+:root {
+  --primary-green: #1b7f4e;
+  --dark-green: #145c3a;
+  --light-green: #e8f5ee;
+  --accent-green: #2ecc71;
+  --white: #ffffff;
+  --text-dark: #1f2933;
+  --text-muted: #5f6c7b;
+  --shadow: 0 10px 30px rgba(27, 127, 78, 0.12);
+  --radius: 12px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--text-dark);
+  background-color: #f7fbf9;
+  line-height: 1.6;
+}
+
+.navbar {
+  background: var(--white) !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.navbar-brand {
+  font-weight: 700;
+  color: var(--primary-green) !important;
+}
+
+.nav-link {
+  color: var(--text-dark) !important;
+  font-weight: 500;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: var(--primary-green) !important;
+}
+
+.hero-section {
+  background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+  color: var(--white);
+  padding: 5rem 0;
+  border-radius: 0 0 2rem 2rem;
+}
+
+.hero-section h1 {
+  font-weight: 700;
+}
+
+.btn-primary {
+  background-color: var(--primary-green);
+  border-color: var(--primary-green);
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: var(--dark-green);
+  border-color: var(--dark-green);
+}
+
+.btn-outline-primary {
+  color: var(--primary-green);
+  border-color: var(--primary-green);
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--primary-green);
+  border-color: var(--primary-green);
+}
+
+.section-title {
+  color: var(--primary-green);
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+.service-card,
+.product-card,
+.info-card {
+  background: var(--white);
+  border: none;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  height: 100%;
+}
+
+.service-card:hover,
+.product-card:hover,
+.info-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 40px rgba(27, 127, 78, 0.18);
+}
+
+.service-icon {
+  width: 64px;
+  height: 64px;
+  background: var(--light-green);
+  color: var(--primary-green);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
+}
+
+.product-card img {
+  height: 200px;
+  object-fit: cover;
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+
+.price-tag {
+  color: var(--primary-green);
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: var(--accent-green);
+  color: var(--white);
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 2rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--primary-green);
+  box-shadow: 0 0 0 0.2rem rgba(27, 127, 78, 0.2);
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  font-weight: 600;
+  background: var(--light-green);
+  color: var(--dark-green);
+}
+
+.status-Ordered { background: #fff3cd; color: #856404; }
+.status-Processing { background: #cce5ff; color: #004085; }
+.status-Shipped { background: #d4edda; color: #155724; }
+.status-Delivered { background: #d1ecf1; color: #0c5460; }
+
+.footer {
+  background: var(--dark-green);
+  color: var(--white);
+  padding: 2.5rem 0 1rem;
+  margin-top: 4rem;
+}
+
+.footer a {
+  color: #b8e6cc;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  color: var(--white);
+}
+
+.alert-toast {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  z-index: 1050;
+  min-width: 280px;
+}
+
+.table-responsive {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1rem;
+}
+
+.admin-section {
+  margin-bottom: 3rem;
+}
+
+.page-header {
+  background: var(--light-green);
+  padding: 2rem 0;
+  margin-bottom: 2rem;
+  border-bottom: 3px solid var(--primary-green);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-muted);
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    padding: 3rem 0;
+    text-align: center;
+  }
+
+  .hero-section .btn {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+}

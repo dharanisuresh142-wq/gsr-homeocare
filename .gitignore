@@ -1,0 +1,18 @@
+# Backend
+backend/target/
+backend/data/
+tools/
+backend/.idea/
+backend/*.iml
+
+# JDK bundles (do not upload)
+oracleJdk-*/
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
