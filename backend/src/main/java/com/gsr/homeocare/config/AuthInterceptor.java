@@ -79,6 +79,12 @@ public class AuthInterceptor implements HandlerInterceptor {
         if (path.startsWith("/api/consultations") && "POST".equals(method)) {
             return true;
         }
+        if (path.startsWith("/api/chat") && "POST".equals(method)) {
+            return true;
+        }
+        if (path.startsWith("/api/chat") && "GET".equals(method) && !path.equals("/api/chat/inbox")) {
+            return true;
+        }
         if (path.startsWith("/api/orders/") && "GET".equals(method)) {
             return true;
         }
@@ -98,6 +104,9 @@ public class AuthInterceptor implements HandlerInterceptor {
         if (path.startsWith("/api/orders") && "GET".equals(method)) {
             String phone = request.getParameter("phone");
             return phone == null || phone.isBlank();
+        }
+        if ("/api/chat/inbox".equals(path) && "GET".equals(method)) {
+            return true;
         }
         return false;
     }

@@ -1,0 +1,11 @@
+GSR Homeocare System — Access links
+Contact: +91 99480 54618
+
+WINDOWS (this PC):
+http://localhost:5500
+
+MOBILE (same Wi-Fi as PC):
+http://192.168.1.106:5500
+
+Start app: double-click RUN-ALL.bat
+Updated IP: run MOBILE-LINK.bat

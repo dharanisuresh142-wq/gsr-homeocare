@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Book Consultation | GSR Homeocare System</title>
+  <title>Online Consultation | GSR Homeo Care Centre</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
   <link href="css/style.css" rel="stylesheet">
@@ -23,16 +23,22 @@
 
   <div class="page-header">
     <div class="container">
-      <h1 class="section-title mb-0">Book a Consultation</h1>
-      <p class="text-muted mb-0">Schedule online or in-clinic appointments</p>
+      <h1 class="section-title mb-0">Online Consultation</h1>
+      <p class="text-muted mb-0">Online service only — book your appointment on the web</p>
     </div>
   </div>
 
   <main class="container pb-5">
     <div class="row justify-content-center">
       <div class="col-lg-8">
+        <div class="alert alert-success">
+          <i class="bi bi-wifi me-2"></i><strong>Online only.</strong> Need help now?
+          <a href="chat.html" class="alert-link">Website chat</a> or
+          <a href="#" class="alert-link" id="consultWhatsapp">WhatsApp</a>.
+        </div>
         <div class="form-card">
           <form id="consultationForm">
+            <input type="hidden" id="mode" value="online">
             <div class="mb-3">
               <label for="name" class="form-label">Full Name</label>
               <input type="text" class="form-control" id="name" required placeholder="Enter your full name">
@@ -45,20 +51,12 @@
               <label for="problem" class="form-label">Health Problem</label>
               <textarea class="form-control" id="problem" rows="4" required placeholder="Describe your symptoms or concern"></textarea>
             </div>
-            <div class="mb-3">
-              <label for="mode" class="form-label">Consultation Mode</label>
-              <select class="form-select" id="mode" required>
-                <option value="">Select mode</option>
-                <option value="online">Online</option>
-                <option value="offline">Offline (In-clinic)</option>
-              </select>
-            </div>
             <div class="mb-4">
-              <label for="date" class="form-label">Preferred Date</label>
+              <label for="date" class="form-label">Preferred Date (online session)</label>
               <input type="date" class="form-control" id="date" required>
             </div>
             <button type="submit" class="btn btn-primary w-100 btn-lg">
-              <i class="bi bi-calendar-check me-2"></i>Submit Booking
+              <i class="bi bi-camera-video me-2"></i>Book Online Consultation
             </button>
           </form>
         </div>
@@ -68,7 +66,7 @@
 
   <footer class="footer">
     <div class="container text-center">
-      <p class="mb-0">&copy; 2026 GSR Homeocare System</p>
+      <p class="mb-0">&copy; 2026 GSR Homeo Care Centre</p>
     </div>
   </footer>
 
@@ -77,5 +75,14 @@
   <script src="js/config.js"></script>
   <script src="js/script.js"></script>
   <script src="js/auth.js"></script>
+  <script>
+    document.getElementById("consultWhatsapp")?.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (window.GSR_CONTACT) {
+        const t = encodeURIComponent("Hello GSR Homeo Care Centre, I want to book an online consultation.");
+        window.open(`${window.GSR_CONTACT.whatsapp}?text=${t}`, "_blank");
+      }
+    });
+  </script>
 </body>
 </html>

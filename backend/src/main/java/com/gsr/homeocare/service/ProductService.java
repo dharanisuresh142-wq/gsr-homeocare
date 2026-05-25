@@ -25,6 +25,10 @@ public class ProductService {
 
     public Product createProduct(Product product) {
         product.setOrganizationId(mongoProperties.getOrganizationId());
+        if (product.getMedicineId() == null || product.getMedicineId().isBlank()) {
+            throw new IllegalArgumentException("Medicine ID is required");
+        }
+        product.setMedicineId(product.getMedicineId().trim().toUpperCase());
         return productRepository.save(product);
     }
 

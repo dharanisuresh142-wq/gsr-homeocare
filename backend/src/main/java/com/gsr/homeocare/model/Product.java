@@ -8,7 +8,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "products")
 public class Product extends BaseDocument {
 
-    @NotBlank(message = "Product name is required")
+    @NotBlank(message = "Medicine ID is required")
+    private String medicineId;
+
     private String name;
 
     @NotNull(message = "Price is required")
@@ -22,6 +24,14 @@ public class Product extends BaseDocument {
     private String usageInstructions;
 
     public Product() {
+    }
+
+    public String getMedicineId() {
+        return medicineId;
+    }
+
+    public void setMedicineId(String medicineId) {
+        this.medicineId = medicineId;
     }
 
     public String getName() {

@@ -3,6 +3,7 @@ package com.gsr.homeocare.model;
 public class OrderItem {
 
     private String productId;
+    private String medicineId;
     private String productName;
     private int quantity;
     private double price;
@@ -19,6 +20,14 @@ public class OrderItem {
 
     public String getProductId() {
         return productId;
+    }
+
+    public String getMedicineId() {
+        return medicineId;
+    }
+
+    public void setMedicineId(String medicineId) {
+        this.medicineId = medicineId;
     }
 
     public void setProductId(String productId) {

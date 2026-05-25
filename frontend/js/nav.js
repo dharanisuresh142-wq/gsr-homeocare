@@ -14,6 +14,7 @@ function gsrNavLinks() {
     <li class="nav-item"><a class="nav-link" href="checkout.html">Checkout</a></li>
     <li class="nav-item"><a class="nav-link" href="orders.html">My Orders</a></li>
     <li class="nav-item"><a class="nav-link" href="consultation.html">Consultation</a></li>
+    <li class="nav-item"><a class="nav-link" href="chat.html">Chat / WhatsApp</a></li>
     <li class="nav-item"><a class="nav-link" href="tracking.html">Tracking</a></li>
     <li class="nav-item" id="authNav"></li>
     <li class="nav-item ms-lg-3 position-relative">

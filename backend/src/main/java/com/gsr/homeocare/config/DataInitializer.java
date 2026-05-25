@@ -15,6 +15,7 @@ public class DataInitializer {
             String orgId = mongoProperties.getOrganizationId();
             if (productRepository.countByOrganizationId(orgId) == 0) {
                 productRepository.save(createProduct(orgId,
+                        "MED-ARNICA-30C",
                         "Arnica Montana 30C",
                         249.0,
                         "Homeopathic remedy for bruises, muscle soreness, and minor injuries.",
@@ -22,6 +23,7 @@ public class DataInitializer {
                         "4 drops under tongue, 3 times daily — morning, afternoon, and night."
                 ));
                 productRepository.save(createProduct(orgId,
+                        "MED-BELL-30C",
                         "Belladonna 30C",
                         279.0,
                         "Homeopathic medicine for fever, headache, and sudden inflammation.",
@@ -29,6 +31,7 @@ public class DataInitializer {
                         "5 drops in half glass water, every 4 hours until symptoms improve."
                 ));
                 productRepository.save(createProduct(orgId,
+                        "MED-IMMUNITY-01",
                         "Immunity Booster Drops",
                         199.0,
                         "Daily homeopathic drops to support natural immunity.",
@@ -39,9 +42,10 @@ public class DataInitializer {
         };
     }
 
-    private Product createProduct(String orgId, String name, Double price, String description, String image, String usage) {
+    private Product createProduct(String orgId, String medicineId, String name, Double price, String description, String image, String usage) {
         Product product = new Product();
         product.setOrganizationId(orgId);
+        product.setMedicineId(medicineId);
         product.setName(name);
         product.setPrice(price);
         product.setDescription(description);

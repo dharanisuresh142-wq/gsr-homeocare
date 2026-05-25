@@ -82,13 +82,13 @@ function setActiveNav() {
   });
 }
 
-function addToCart(id, name, price) {
+function addToCart(id, name, price, medicineId) {
   const sid = String(id);
   const existing = cart.find((c) => c.id === sid);
   if (existing) {
     existing.quantity += 1;
   } else {
-    cart.push({ id: sid, name, price: Number(price), quantity: 1 });
+    cart.push({ id: sid, name, price: Number(price), quantity: 1, medicineId: medicineId || name });
   }
   saveCart();
   showAlert(`<strong>${escapeHtml(name)}</strong> added to cart!`);
@@ -190,7 +190,8 @@ function setupCheckoutForm() {
       paymentMethod,
       items: cart.map((c) => ({
         productId: c.id,
-        productName: c.name,
+        medicineId: c.medicineId || c.name,
+        productName: c.medicineId || c.name,
         quantity: c.quantity,
         price: c.price,
       })),
@@ -225,7 +226,7 @@ function formatDate(iso) {
 
 function renderOrderCard(order, showPhone = false) {
   const itemsHtml = (order.items || [])
-    .map((i) => `<li>${escapeHtml(i.productName)} × ${i.quantity} — ₹${(i.price * i.quantity).toFixed(2)}</li>`)
+    .map((i) => `<li><strong>${escapeHtml(i.medicineId || i.productName)}</strong> × ${i.quantity} — ₹${(i.price * i.quantity).toFixed(2)}</li>`)
     .join("");
 
   return `
@@ -296,22 +297,25 @@ async function loadMedicines() {
       container.innerHTML = list
         .map((medicine) => {
           const usage = medicine.usageInstructions || "Follow your doctor's prescribed dosage.";
+          const medId = medicine.medicineId || medicine.id;
+          const label = medicine.name || medicine.description || "";
           return `
         <div class="col-md-6 col-lg-4 mb-4">
           <div class="card medicine-card h-100">
-            <img src="${escapeHtml(medicine.image || "images/logo.png")}" class="card-img-top" alt="${escapeHtml(medicine.name)}">
+            <img src="${escapeHtml(medicine.image || "images/logo.png")}" class="card-img-top" alt="${escapeHtml(medId)}">
             <div class="card-body d-flex flex-column">
-              <h5 class="card-title">${escapeHtml(medicine.name)}</h5>
-              <p class="card-text text-muted">${escapeHtml(medicine.description || "")}</p>
+              <p class="medicine-id-tag mb-1">${escapeHtml(medId)}</p>
+              ${label ? `<p class="card-text text-muted small mb-2">${escapeHtml(label)}</p>` : ""}
+              <p class="card-text text-muted flex-grow-1">${escapeHtml(medicine.description || "")}</p>
               <div class="usage-box mb-3">
                 <strong><i class="bi bi-clock-history me-1"></i>Usage:</strong>
                 <p class="mb-0 small">${escapeHtml(usage)}</p>
               </div>
               <p class="price-tag">₹${Number(medicine.price).toFixed(2)}</p>
               <button type="button" class="btn btn-primary w-100 mb-2 btn-add-cart"
-                data-id="${medicine.id}" data-name="${escapeHtml(medicine.name)}" data-price="${medicine.price}">Add to Cart</button>
+                data-id="${medicine.id}" data-medicine-id="${escapeHtml(medId)}" data-name="${escapeHtml(medId)}" data-price="${medicine.price}">Add to Cart</button>
               <button type="button" class="btn btn-outline-success w-100 btn-set-alarm"
-                data-name="${escapeHtml(medicine.name)}" data-usage="${escapeHtml(usage)}">
+                data-name="${escapeHtml(medId)}" data-usage="${escapeHtml(usage)}">
                 <i class="bi bi-alarm me-1"></i>Set Usage Alarm
               </button>
             </div>
@@ -320,7 +324,9 @@ async function loadMedicines() {
         })
         .join("");
       container.querySelectorAll(".btn-add-cart").forEach((btn) => {
-        btn.addEventListener("click", () => addToCart(btn.dataset.id, btn.dataset.name, Number(btn.dataset.price)));
+        btn.addEventListener("click", () =>
+          addToCart(btn.dataset.id, btn.dataset.name, Number(btn.dataset.price), btn.dataset.medicineId)
+        );
       });
       container.querySelectorAll(".btn-set-alarm").forEach((btn) => {
         btn.addEventListener("click", () => {
@@ -339,7 +345,8 @@ async function loadMedicines() {
         render(
           medicines.filter(
             (m) =>
-              m.name.toLowerCase().includes(q) ||
+              (m.medicineId || "").toLowerCase().includes(q) ||
+              (m.name || "").toLowerCase().includes(q) ||
               (m.description || "").toLowerCase().includes(q) ||
               (m.usageInstructions || "").toLowerCase().includes(q)
           )
@@ -365,11 +372,11 @@ function setupConsultationForm() {
           name: document.getElementById("name").value.trim(),
           phone: document.getElementById("phone").value.trim(),
           problem: document.getElementById("problem").value.trim(),
-          mode: document.getElementById("mode").value,
+          mode: "online",
           date: document.getElementById("date").value,
         }),
       });
-      showAlert(`Consultation booked! Reference: <strong>#${result.id}</strong>`);
+      showAlert(`Online consultation booked! Reference: <strong>#${result.id}</strong>`);
       form.reset();
     } catch (error) {
       showAlert(error.message, "danger");
@@ -400,7 +407,7 @@ async function loadConsultationsAdmin() {
   try {
     const consultations = await apiRequest("/consultations");
     tableBody.innerHTML = consultations.length
-      ? consultations.map((c) => `<tr><td>${c.id}</td><td>${escapeHtml(c.name)}</td><td>${c.phone}</td><td>${escapeHtml(c.problem)}</td><td><span class="badge bg-success">${c.mode}</span></td><td>${c.date}</td></tr>`).join("")
+      ? consultations.map((c) => `<tr><td>${c.id}</td><td>${escapeHtml(c.name)}</td><td>${c.phone}</td><td>${escapeHtml(c.problem)}</td><td><span class="badge bg-success">Online</span></td><td>${c.date}</td></tr>`).join("")
       : '<tr><td colspan="6" class="text-center text-muted">No consultations.</td></tr>';
   } catch (error) {
     tableBody.innerHTML = `<tr><td colspan="6" class="text-danger">${error.message}</td></tr>`;
@@ -432,11 +439,11 @@ async function loadAdminMedicines() {
               .map(
                 (m) => `
               <tr>
-                <td><strong>${escapeHtml(m.name)}</strong><br><small class="text-muted">${escapeHtml(m.description || "")}</small></td>
+                <td><strong class="medicine-id-tag">${escapeHtml(m.medicineId || m.id)}</strong><br><small class="text-muted">${escapeHtml(m.name || m.description || "")}</small></td>
                 <td>₹${Number(m.price).toFixed(2)}</td>
                 <td class="small">${escapeHtml(m.usageInstructions || "—")}</td>
                 <td class="text-end">
-                  <button type="button" class="btn btn-sm btn-outline-danger btn-delete-medicine" data-id="${m.id}" data-name="${escapeHtml(m.name)}">
+                  <button type="button" class="btn btn-sm btn-outline-danger btn-delete-medicine" data-id="${m.id}" data-name="${escapeHtml(m.medicineId || m.id)}">
                     <i class="bi bi-trash"></i> Delete
                   </button>
                 </td>
@@ -449,7 +456,7 @@ async function loadAdminMedicines() {
     container.querySelectorAll(".btn-delete-medicine").forEach((btn) => {
       btn.addEventListener("click", async () => {
         const name = btn.dataset.name;
-        if (!confirm(`Delete medicine "${name}"? This cannot be undone.`)) return;
+        if (!confirm(`Delete medicine ID "${name}"? This cannot be undone.`)) return;
         try {
           await apiRequest(`/products/${btn.dataset.id}`, { method: "DELETE" });
           showAlert(`"${name}" deleted.`);
@@ -483,10 +490,13 @@ function setupAdminProductForm() {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     try {
+      const medicineId = document.getElementById("productMedicineId").value.trim().toUpperCase();
+      const descName = document.getElementById("productName").value.trim();
       await apiRequest("/products", {
         method: "POST",
         body: JSON.stringify({
-          name: document.getElementById("productName").value.trim(),
+          medicineId,
+          name: descName || medicineId,
           price: parseFloat(document.getElementById("productPrice").value),
           description: document.getElementById("productDescription").value.trim(),
           image: document.getElementById("productImage").value.trim(),
@@ -576,6 +586,25 @@ async function getMobileAccessUrl(port) {
   return null;
 }
 
+function renderWhatsAppShortcut() {
+  if (!window.GSR_CONTACT) return;
+  const homeBtn = document.getElementById("homeWhatsappBtn");
+  if (homeBtn) {
+    const t = encodeURIComponent("Hello GSR Homeo Care Centre, I need online help.");
+    homeBtn.href = `${window.GSR_CONTACT.whatsapp}?text=${t}`;
+  }
+  if (document.getElementById("gsrWhatsappFloat")) return;
+  const float = document.createElement("a");
+  float.id = "gsrWhatsappFloat";
+  float.className = "gsr-whatsapp-float";
+  float.href = `${window.GSR_CONTACT.whatsapp}?text=${encodeURIComponent("Hello GSR Homeo Care Centre")}`;
+  float.target = "_blank";
+  float.rel = "noopener";
+  float.title = "Chat on WhatsApp";
+  float.innerHTML = '<i class="bi bi-whatsapp"></i>';
+  document.body.appendChild(float);
+}
+
 async function renderAccessLinks() {
   const box = document.getElementById("accessLinksBox");
   if (!box || !window.GSR_CONTACT) return;
@@ -603,8 +632,9 @@ async function renderAccessLinks() {
         </div>
       </div>
       <div class="col-12 text-center">
-        <a href="${window.GSR_CONTACT.tel}" class="btn btn-outline-primary me-2"><i class="bi bi-telephone"></i> Call ${window.GSR_CONTACT.display}</a>
-        <a href="${window.GSR_CONTACT.whatsapp}" class="btn btn-success" target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i> WhatsApp</a>
+        <a href="chat.html" class="btn btn-primary me-2"><i class="bi bi-chat-dots"></i> Online Chat</a>
+        <a href="${window.GSR_CONTACT.whatsapp}" class="btn btn-success me-2" target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i> WhatsApp</a>
+        <a href="${window.GSR_CONTACT.tel}" class="btn btn-outline-primary"><i class="bi bi-telephone"></i> Call</a>
       </div>
     </div>`;
 }
@@ -619,6 +649,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (typeof renderAuthNav === "function") renderAuthNav();
   renderContactFooter();
   renderAccessLinks();
+  renderWhatsAppShortcut();
   showConnectionStatus();
   loadMedicines();
   setupCheckoutForm();

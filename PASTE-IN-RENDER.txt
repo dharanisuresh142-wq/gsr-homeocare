@@ -1,0 +1,22 @@
+Copy everything below into Render → gsr-homeocare-api → Environment
+
+KEY:
+MONGODB_URI
+
+VALUE (edit YOUR_PASSWORD only):
+mongodb+srv://dharanisuresh142_db_user:YOUR_PASSWORD@cluster0.nszjrd6.mongodb.net/gsr_homeocare_db?retryWrites=true&w=majority&appName=Cluster0
+
+---
+Also add if missing:
+
+KEY: SPRING_PROFILES_ACTIVE
+VALUE: mongodb
+
+KEY: APP_MONGODB_ORGANIZATION_ID
+VALUE: 6a126d53e091a2b24b63a82c
+
+---
+Then click Save → Manual Deploy → Manual sync on blueprint
+
+Test when Live:
+https://gsr-homeocare-api.onrender.com/api/health

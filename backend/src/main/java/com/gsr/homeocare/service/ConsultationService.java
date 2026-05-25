@@ -25,6 +25,7 @@ public class ConsultationService {
 
     public Consultation createConsultation(Consultation consultation) {
         consultation.setOrganizationId(mongoProperties.getOrganizationId());
+        consultation.setMode("online");
         return consultationRepository.save(consultation);
     }
 

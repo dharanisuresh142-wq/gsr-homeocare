@@ -1,0 +1,50 @@
+GSR Homeocare — UPDATE LIVE LINKS (do in order)
+
+WHY LINKS LOOK OLD:
+  Latest code was only on your PC. Netlify + Render need a new deploy.
+
+========================================
+STEP 1 — Push to GitHub (if not done)
+========================================
+Double-click: UPLOAD-GIT-PUSH.bat
+OR in PowerShell:
+  cd "c:\Users\ruthi\Downloads\GSR homeocare\mano"
+  git push origin main
+(Sign in to GitHub if a window opens.)
+
+========================================
+STEP 2 — Update RENDER (backend API)
+========================================
+1. https://dashboard.render.com
+2. Open: gsr-homeocare-api
+3. Manual Deploy → Deploy latest commit
+4. Wait until Live (5-10 min)
+5. Test: https://gsr-homeocare-api.onrender.com/api/health
+
+========================================
+STEP 3 — Update NETLIFY (website)
+========================================
+1. https://app.netlify.com
+2. Open your site (see name at top)
+3. Deploys tab
+4. DRAG this folder into the box:
+   c:\Users\ruthi\Downloads\GSR homeocare\mano\frontend
+5. Wait Published (1-2 min)
+6. Copy YOUR site URL from Netlify (top of page)
+
+========================================
+YOUR LINKS (replace YOUR-SITE with Netlify URL)
+========================================
+Website:        https://YOUR-SITE.netlify.app
+Customer login: https://YOUR-SITE.netlify.app/login.html
+Admin login:    https://YOUR-SITE.netlify.app/login.html?staff=1
+API (not website): https://gsr-homeocare-api.onrender.com/api/health
+
+DO NOT open gsr-homeocare-api.onrender.com as the website.
+That is API only.
+
+========================================
+IF gsr-homeocare.netlify.app shows 404
+========================================
+Your live site may have a different name.
+Use the URL shown in Netlify dashboard after Step 3.
