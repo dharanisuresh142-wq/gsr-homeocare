@@ -14,7 +14,7 @@
     <groupId>com.gsr</groupId>
     <artifactId>homeocare</artifactId>
     <version>1.0.0</version>
-    <description>REST API for GSR Homeocare and Physiotherapy Clinic</description>
+    <description>REST API for GSR Homeo Care Centre</description>
 
     <properties>
         <java.version>17</java.version>

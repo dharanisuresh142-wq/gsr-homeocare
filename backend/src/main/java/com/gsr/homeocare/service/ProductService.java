@@ -33,4 +33,9 @@ public class ProductService {
                 .filter(p -> mongoProperties.getOrganizationId().equals(p.getOrganizationId()))
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
     }
+
+    public void deleteProduct(String id) {
+        Product product = getProductById(id);
+        productRepository.delete(product);
+    }
 }

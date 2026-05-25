@@ -1,6 +1,32 @@
 const AUTH_TOKEN_KEY = "gsrAuthToken";
 const AUTH_USER_KEY = "gsrAuthUser";
 
+/** Same website — add ?staff=1 (not linked for customers) */
+const ADMIN_LOGIN_URL = "login.html?staff=1";
+
+function isStaffLoginMode() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("staff") === "1" || window.location.hash === "#staff";
+}
+
+function initLoginPageMode() {
+  if (!document.getElementById("customerLoginArea")) return;
+
+  const staffArea = document.getElementById("staffLoginArea");
+  const customerArea = document.getElementById("customerLoginArea");
+  const title = document.getElementById("loginPageTitle");
+
+  if (isStaffLoginMode()) {
+    customerArea?.classList.add("d-none");
+    staffArea?.classList.remove("d-none");
+    if (title) title.textContent = "Admin login";
+    document.title = "Admin Login | GSR Homeo Care Centre";
+  } else {
+    customerArea?.classList.remove("d-none");
+    staffArea?.classList.add("d-none");
+  }
+}
+
 function getAuthToken() {
   return localStorage.getItem(AUTH_TOKEN_KEY);
 }
@@ -68,10 +94,9 @@ function renderAuthNav() {
       <li class="nav-item"><a class="nav-link" href="login.html#register"><i class="bi bi-person-plus me-1"></i>Register</a></li>`;
   }
 
-  const adminLink = document.querySelector('.nav-link[href="admin.html"]');
-  if (adminLink && !isAdmin()) {
-    adminLink.closest(".nav-item")?.remove();
-  }
+  document.querySelectorAll('.nav-link[href="admin.html"]').forEach((link) => {
+    link.closest(".nav-item")?.remove();
+  });
 }
 
 async function logout() {
@@ -84,51 +109,50 @@ async function logout() {
   }
   clearAuth();
   showAlert?.("Logged out successfully", "success");
-  window.location.href = "index.html";
+  const onAdminArea =
+    window.location.pathname.includes("admin") || document.body.dataset.requireAdmin === "true";
+  window.location.href = onAdminArea ? ADMIN_LOGIN_URL : "index.html";
 }
 
 function requireAdmin() {
   if (isAdmin() && getAuthToken()) return true;
-  window.location.href = "login.html?type=admin";
+  window.location.href = "login.html?staff=1&redirect=admin.html";
   return false;
 }
 
 function requireCustomer() {
   if (isCustomer() && getAuthToken()) return true;
-  window.location.href = "login.html?type=customer&redirect=orders.html";
+  window.location.href = "login.html?redirect=orders.html";
   return false;
 }
 
-function setupLoginPage() {
-  const customerForm = document.getElementById("customerLoginForm");
-  const adminForm = document.getElementById("adminLoginForm");
-  const registerForm = document.getElementById("registerForm");
-
-  const params = new URLSearchParams(window.location.search);
-  const type = params.get("type") || "customer";
-  if (type === "admin") {
-    document.querySelector('#loginTabs button[data-bs-target="#adminTab"]')?.click();
-  }
-  if (window.location.hash === "#register") {
+function openLoginTab(hash) {
+  if (hash === "#register") {
     document.querySelector('#loginTabs button[data-bs-target="#registerTab"]')?.click();
   }
+}
+
+function setupCustomerLoginPage() {
+  const customerForm = document.getElementById("customerLoginForm");
+  const registerForm = document.getElementById("registerForm");
+  if (!customerForm && !registerForm) return;
+  if (isStaffLoginMode()) return;
+
+  openLoginTab(window.location.hash);
+
+  const params = new URLSearchParams(window.location.search);
+  const redirect = params.get("redirect");
 
   customerForm?.addEventListener("submit", async (e) => {
     e.preventDefault();
-    await doLogin({
-      username: document.getElementById("customerPhone").value.trim(),
-      password: document.getElementById("customerPassword").value,
-      loginType: "customer",
-    });
-  });
-
-  adminForm?.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    await doLogin({
-      username: document.getElementById("adminUsername").value.trim(),
-      password: document.getElementById("adminPassword").value,
-      loginType: "admin",
-    });
+    await doLogin(
+      {
+        username: document.getElementById("customerPhone").value.trim(),
+        password: document.getElementById("customerPassword").value,
+        loginType: "customer",
+      },
+      redirect || "index.html"
+    );
   });
 
   registerForm?.addEventListener("submit", async (e) => {
@@ -145,14 +169,34 @@ function setupLoginPage() {
       });
       setAuth(auth);
       showAlert("Account created! Welcome, " + auth.name);
-      window.location.href = "index.html";
+      window.location.href = redirect || "index.html";
     } catch (error) {
       showAlert(error.message, "danger");
     }
   });
 }
 
-async function doLogin(payload) {
+function setupAdminLoginPage() {
+  const adminForm = document.getElementById("adminLoginForm");
+  if (!adminForm) return;
+
+  const params = new URLSearchParams(window.location.search);
+  const redirect = params.get("redirect") || "admin.html";
+
+  adminForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    await doLogin(
+      {
+        username: document.getElementById("adminUsername").value.trim(),
+        password: document.getElementById("adminPassword").value,
+        loginType: "admin",
+      },
+      redirect
+    );
+  });
+}
+
+async function doLogin(payload, redirectUrl) {
   try {
     const auth = await apiRequest("/auth/login", {
       method: "POST",
@@ -160,15 +204,36 @@ async function doLogin(payload) {
     });
     setAuth(auth);
     showAlert("Welcome, " + auth.name + "!");
-    const redirect = new URLSearchParams(window.location.search).get("redirect");
-    if (auth.role === "ADMIN") window.location.href = redirect || "admin.html";
-    else window.location.href = redirect || "index.html";
+    if (auth.role === "ADMIN") {
+      window.location.href = redirectUrl || "admin.html";
+    } else {
+      window.location.href = redirectUrl || "index.html";
+    }
   } catch (error) {
     showAlert(error.message, "danger");
   }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  const path = window.location.pathname;
+  const hash = window.location.hash;
+  const params = new URLSearchParams(window.location.search);
+
+  if (path.endsWith("admin-login.html")) {
+    const redirect = params.get("redirect");
+    window.location.replace(redirect ? `login.html?staff=1&redirect=${redirect}` : ADMIN_LOGIN_URL);
+    return;
+  }
+
+  if (path.endsWith("login.html") && (params.get("type") === "admin" || hash === "#staff" || hash === "#admin")) {
+    const redirect = params.get("redirect");
+    window.location.replace(redirect ? `login.html?staff=1&redirect=${redirect}` : ADMIN_LOGIN_URL);
+    return;
+  }
+
+  initLoginPageMode();
   renderAuthNav();
-  setupLoginPage();
+  setupCustomerLoginPage();
+  setupAdminLoginPage();
+  if (hash === "#register") openLoginTab(hash);
 });

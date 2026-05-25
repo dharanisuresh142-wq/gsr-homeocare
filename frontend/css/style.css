@@ -31,6 +31,40 @@ body {
   color: var(--primary-green) !important;
 }
 
+.navbar-logo {
+  height: 48px;
+  width: auto;
+  object-fit: contain;
+}
+
+.navbar-brand-text {
+  font-size: 0.95rem;
+  line-height: 1.2;
+  max-width: 10rem;
+}
+
+.hero-logo {
+  max-width: 280px;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.2));
+}
+
+.usage-box {
+  background: var(--light-green);
+  border-radius: 8px;
+  padding: 0.75rem;
+  border-left: 4px solid var(--primary-green);
+}
+
+.medicine-card img {
+  height: 200px;
+  object-fit: contain;
+  background: var(--light-green);
+  padding: 1rem;
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+
 .nav-link {
   color: var(--text-dark) !important;
   font-weight: 500;
@@ -81,6 +115,7 @@ body {
 
 .service-card,
 .product-card,
+.medicine-card,
 .info-card {
   background: var(--white);
   border: none;
@@ -92,6 +127,7 @@ body {
 
 .service-card:hover,
 .product-card:hover,
+.medicine-card:hover,
 .info-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 16px 40px rgba(27, 127, 78, 0.18);

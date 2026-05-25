@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Usage &amp; Alarms | GSR Homeo Care Centre</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">GSR</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto align-items-lg-center"></ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="container">
+      <h1 class="section-title mb-0">Medicine Usage &amp; Alarms</h1>
+      <p class="text-muted mb-0">Set daily reminders so you never miss a dose</p>
+    </div>
+  </div>
+
+  <main class="container pb-5">
+    <div class="row mb-4">
+      <div class="col-12">
+        <button type="button" id="enableNotificationsBtn" class="btn btn-outline-primary">
+          <i class="bi bi-bell me-2"></i>Enable phone notifications
+        </button>
+        <p class="text-muted small mt-2 mb-0">Keep this page open or enable notifications for alarm alerts at the set time.</p>
+      </div>
+    </div>
+
+    <section class="mb-5">
+      <h3 class="section-title h5">Your reminders</h3>
+      <div id="alarmsList"></div>
+    </section>
+
+    <section>
+      <h3 class="section-title h5">Add new reminder</h3>
+      <div class="form-card p-4">
+        <form id="alarmForm">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label" for="alarmMedicineName">Medicine name</label>
+              <input type="text" class="form-control" id="alarmMedicineName" required placeholder="e.g. Arnica Montana 30C">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="alarmTime">Daily alarm time</label>
+              <input type="time" class="form-control" id="alarmTime" required>
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="alarmUsage">Usage instructions</label>
+              <textarea class="form-control" id="alarmUsage" rows="2" placeholder="e.g. 4 drops under tongue, 3 times daily"></textarea>
+            </div>
+            <div class="col-12">
+              <button type="submit" class="btn btn-primary"><i class="bi bi-alarm me-2"></i>Save reminder</button>
+              <a href="medicines.html" class="btn btn-outline-secondary ms-2">Browse medicines</a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container text-center">
+      <p class="mb-0">&copy; 2026 GSR Homeo Care Centre</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/script.js"></script>
+  <script src="js/alarms.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>

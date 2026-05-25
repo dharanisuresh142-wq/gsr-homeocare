@@ -67,7 +67,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     }
 
     private boolean isPublic(String path, String method) {
-        if (path.startsWith("/api/health") || path.startsWith("/api/auth/")) {
+        if ("/".equals(path) || path.startsWith("/api/health") || path.startsWith("/api/auth/")) {
             return true;
         }
         if (path.startsWith("/api/products") && "GET".equals(method)) {
@@ -86,7 +86,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     }
 
     private boolean requiresAdmin(String path, String method, HttpServletRequest request) {
-        if (path.startsWith("/api/products") && "POST".equals(method)) {
+        if (path.startsWith("/api/products") && ("POST".equals(method) || "DELETE".equals(method))) {
             return true;
         }
         if (path.startsWith("/api/consultations") && "GET".equals(method)) {

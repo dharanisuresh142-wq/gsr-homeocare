@@ -115,7 +115,7 @@ function renderCheckoutCart() {
   if (!container) return;
 
   if (!cart.length) {
-    container.innerHTML = '<p class="text-muted">Cart is empty. <a href="products.html">Add products</a></p>';
+    container.innerHTML = '<p class="text-muted">Cart is empty. <a href="medicines.html">Add medicines</a></p>';
     if (totalEl) totalEl.textContent = "₹0.00";
     return;
   }
@@ -281,44 +281,69 @@ function setupOrderHistoryForm() {
   if (savedPhone) form.dispatchEvent(new Event("submit"));
 }
 
-async function loadProducts() {
-  const container = document.getElementById("productsContainer");
-  const searchInput = document.getElementById("productSearch");
+async function loadMedicines() {
+  const container = document.getElementById("medicinesContainer");
+  const searchInput = document.getElementById("medicineSearch");
   if (!container) return;
 
   try {
-    const products = await apiRequest("/products");
+    const medicines = await apiRequest("/products");
     const render = (list) => {
       if (!list.length) {
-        container.innerHTML = '<div class="col-12 empty-state"><p>No products found.</p></div>';
+        container.innerHTML = '<div class="col-12 empty-state"><p>No medicines found.</p></div>';
         return;
       }
       container.innerHTML = list
-        .map(
-          (product) => `
+        .map((medicine) => {
+          const usage = medicine.usageInstructions || "Follow your doctor's prescribed dosage.";
+          return `
         <div class="col-md-6 col-lg-4 mb-4">
-          <div class="card product-card h-100">
-            <img src="${escapeHtml(product.image || "https://via.placeholder.com/400x200?text=GSR")}" class="card-img-top" alt="">
+          <div class="card medicine-card h-100">
+            <img src="${escapeHtml(medicine.image || "images/logo.png")}" class="card-img-top" alt="${escapeHtml(medicine.name)}">
             <div class="card-body d-flex flex-column">
-              <h5 class="card-title">${escapeHtml(product.name)}</h5>
-              <p class="card-text text-muted flex-grow-1">${escapeHtml(product.description || "")}</p>
-              <p class="price-tag">₹${Number(product.price).toFixed(2)}</p>
-              <button type="button" class="btn btn-primary w-100 btn-add-cart"
-                data-id="${product.id}" data-name="${escapeHtml(product.name)}" data-price="${product.price}">Add to Cart</button>
+              <h5 class="card-title">${escapeHtml(medicine.name)}</h5>
+              <p class="card-text text-muted">${escapeHtml(medicine.description || "")}</p>
+              <div class="usage-box mb-3">
+                <strong><i class="bi bi-clock-history me-1"></i>Usage:</strong>
+                <p class="mb-0 small">${escapeHtml(usage)}</p>
+              </div>
+              <p class="price-tag">₹${Number(medicine.price).toFixed(2)}</p>
+              <button type="button" class="btn btn-primary w-100 mb-2 btn-add-cart"
+                data-id="${medicine.id}" data-name="${escapeHtml(medicine.name)}" data-price="${medicine.price}">Add to Cart</button>
+              <button type="button" class="btn btn-outline-success w-100 btn-set-alarm"
+                data-name="${escapeHtml(medicine.name)}" data-usage="${escapeHtml(usage)}">
+                <i class="bi bi-alarm me-1"></i>Set Usage Alarm
+              </button>
             </div>
           </div>
-        </div>`
-        )
+        </div>`;
+        })
         .join("");
       container.querySelectorAll(".btn-add-cart").forEach((btn) => {
         btn.addEventListener("click", () => addToCart(btn.dataset.id, btn.dataset.name, Number(btn.dataset.price)));
       });
+      container.querySelectorAll(".btn-set-alarm").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          if (typeof setMedicineAlarm === "function") {
+            setMedicineAlarm(btn.dataset.name, btn.dataset.usage);
+          } else {
+            window.location.href = `alarms.html?medicine=${encodeURIComponent(btn.dataset.name)}&usage=${encodeURIComponent(btn.dataset.usage)}`;
+          }
+        });
+      });
     };
-    render(products);
+    render(medicines);
     if (searchInput) {
       searchInput.addEventListener("input", () => {
         const q = searchInput.value.toLowerCase();
-        render(products.filter((p) => p.name.toLowerCase().includes(q) || (p.description || "").toLowerCase().includes(q)));
+        render(
+          medicines.filter(
+            (m) =>
+              m.name.toLowerCase().includes(q) ||
+              (m.description || "").toLowerCase().includes(q) ||
+              (m.usageInstructions || "").toLowerCase().includes(q)
+          )
+        );
       });
     }
   } catch (error) {
@@ -382,6 +407,63 @@ async function loadConsultationsAdmin() {
   }
 }
 
+async function loadAdminMedicines() {
+  const container = document.getElementById("adminMedicinesList");
+  if (!container) return;
+  try {
+    const medicines = await apiRequest("/products");
+    if (!medicines.length) {
+      container.innerHTML = '<p class="text-muted">No medicines in database.</p>';
+      return;
+    }
+    container.innerHTML = `
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-success">
+            <tr>
+              <th>Name</th>
+              <th>Price</th>
+              <th>Usage</th>
+              <th class="text-end">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${medicines
+              .map(
+                (m) => `
+              <tr>
+                <td><strong>${escapeHtml(m.name)}</strong><br><small class="text-muted">${escapeHtml(m.description || "")}</small></td>
+                <td>₹${Number(m.price).toFixed(2)}</td>
+                <td class="small">${escapeHtml(m.usageInstructions || "—")}</td>
+                <td class="text-end">
+                  <button type="button" class="btn btn-sm btn-outline-danger btn-delete-medicine" data-id="${m.id}" data-name="${escapeHtml(m.name)}">
+                    <i class="bi bi-trash"></i> Delete
+                  </button>
+                </td>
+              </tr>`
+              )
+              .join("")}
+          </tbody>
+        </table>
+      </div>`;
+    container.querySelectorAll(".btn-delete-medicine").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const name = btn.dataset.name;
+        if (!confirm(`Delete medicine "${name}"? This cannot be undone.`)) return;
+        try {
+          await apiRequest(`/products/${btn.dataset.id}`, { method: "DELETE" });
+          showAlert(`"${name}" deleted.`);
+          loadAdminMedicines();
+        } catch (error) {
+          showAlert(error.message, "danger");
+        }
+      });
+    });
+  } catch (error) {
+    container.innerHTML = `<div class="alert alert-danger">${error.message}</div>`;
+  }
+}
+
 async function loadOrdersAdmin() {
   const container = document.getElementById("adminOrdersList");
   if (!container) return;
@@ -408,10 +490,12 @@ function setupAdminProductForm() {
           price: parseFloat(document.getElementById("productPrice").value),
           description: document.getElementById("productDescription").value.trim(),
           image: document.getElementById("productImage").value.trim(),
+          usageInstructions: document.getElementById("productUsage").value.trim(),
         }),
       });
-      showAlert("Product added!");
+      showAlert("Medicine added!");
       form.reset();
+      loadAdminMedicines();
     } catch (error) {
       showAlert(error.message, "danger");
     }
@@ -457,6 +541,10 @@ async function showConnectionStatus() {
 function renderContactFooter() {
   const c = window.GSR_CONTACT;
   if (!c) return;
+
+  document.querySelectorAll("[data-gsr-email]").forEach((el) => {
+    el.innerHTML = `<a href="${c.mailto}" class="text-white text-decoration-none"><i class="bi bi-envelope me-2"></i>${c.email}</a>`;
+  });
 
   const footer = document.querySelector(".footer .container");
   if (!footer || footer.querySelector(".gsr-footer-contact")) return;
@@ -532,7 +620,7 @@ document.addEventListener("DOMContentLoaded", () => {
   renderContactFooter();
   renderAccessLinks();
   showConnectionStatus();
-  loadProducts();
+  loadMedicines();
   setupCheckoutForm();
   setupOrderHistoryForm();
   setupConsultationForm();
@@ -541,4 +629,5 @@ document.addEventListener("DOMContentLoaded", () => {
   setupAdminOrderForm();
   loadConsultationsAdmin();
   loadOrdersAdmin();
+  loadAdminMedicines();
 });

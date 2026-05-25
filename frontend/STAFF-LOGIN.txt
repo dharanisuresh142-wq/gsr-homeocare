@@ -1,0 +1,19 @@
+GSR Homeo Care Centre — ONE website, TWO logins
+
+WEBSITE (everyone):
+  https://gsr-homeocare.netlify.app
+
+CUSTOMERS (normal login — no admin visible):
+  https://gsr-homeocare.netlify.app/login.html
+
+ADMIN (same site, private link — bookmark for staff only):
+  https://gsr-homeocare.netlify.app/login.html?staff=1
+
+Local admin:
+  http://localhost:5500/login.html?staff=1
+
+Customers never see admin login or admin panel unless they know ?staff=1.
+Do not share the ?staff=1 link publicly.
+
+Username: admin
+Password: (see application-local.properties or Render env)

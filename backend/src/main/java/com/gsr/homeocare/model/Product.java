@@ -19,6 +19,8 @@ public class Product extends BaseDocument {
 
     private String image;
 
+    private String usageInstructions;
+
     public Product() {
     }
 
@@ -52,5 +54,13 @@ public class Product extends BaseDocument {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getUsageInstructions() {
+        return usageInstructions;
+    }
+
+    public void setUsageInstructions(String usageInstructions) {
+        this.usageInstructions = usageInstructions;
     }
 }
