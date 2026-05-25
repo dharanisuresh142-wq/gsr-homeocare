@@ -10,4 +10,6 @@ import java.util.List;
 public interface ConsultationRepository extends MongoRepository<Consultation, String> {
 
     List<Consultation> findByOrganizationIdOrderByDateDesc(String organizationId);
+
+    List<Consultation> findByOrganizationIdAndPhoneOrderByDateDesc(String organizationId, String phone);
 }

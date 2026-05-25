@@ -79,7 +79,11 @@ function renderAuthNav() {
         <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">${escapeHtml(label)}</a>
         <ul class="dropdown-menu dropdown-menu-end">
           ${user.role === "ADMIN" ? '<li><a class="dropdown-item" href="admin.html"><i class="bi bi-speedometer2 me-2"></i>Admin Panel</a></li>' : ""}
-          ${user.role === "CUSTOMER" ? '<li><a class="dropdown-item" href="orders.html"><i class="bi bi-bag me-2"></i>My Orders</a></li>' : ""}
+          ${user.role === "CUSTOMER" ? `
+          <li><a class="dropdown-item" href="dashboard.html"><i class="bi bi-heart-pulse me-2"></i>My Health</a></li>
+          <li><a class="dropdown-item" href="prescriptions.html"><i class="bi bi-file-medical me-2"></i>Prescriptions</a></li>
+          <li><a class="dropdown-item" href="orders.html"><i class="bi bi-bag me-2"></i>My Orders</a></li>
+          <li><a class="dropdown-item" href="followups.html"><i class="bi bi-calendar-check me-2"></i>Follow-ups</a></li>` : ""}
           <li><hr class="dropdown-divider"></li>
           <li><a class="dropdown-item text-danger" href="#" id="logoutBtn"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
         </ul>

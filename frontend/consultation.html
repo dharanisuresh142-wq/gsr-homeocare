@@ -3,60 +3,70 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Online Consultation | GSR Homeo Care Centre</title>
+  <title>Book Consultation | GSR Homeo Care Centre</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
   <link href="css/style.css" rel="stylesheet">
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+  <nav class="navbar navbar-expand-lg navbar-light sticky-top pro-navbar">
     <div class="container">
       <a class="navbar-brand" href="index.html">GSR</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto align-items-lg-center"></ul>
-      </div>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
+      <div class="collapse navbar-collapse" id="navbarNav"><ul class="navbar-nav ms-auto align-items-lg-center"></ul></div>
     </div>
   </nav>
 
-  <div class="page-header">
+  <header class="page-hero">
     <div class="container">
-      <h1 class="section-title mb-0">Online Consultation</h1>
-      <p class="text-muted mb-0">Online service only — book your appointment on the web</p>
+      <h1 class="page-hero-title">Online Doctor Consultation</h1>
+      <p class="page-hero-sub mb-0">Book with <strong id="doctorNameDisplay">Dr. GSR Teja</strong> — consultation fee <strong id="consultationFeeDisplay">₹500</strong></p>
     </div>
-  </div>
+  </header>
 
   <main class="container pb-5">
     <div class="row justify-content-center">
       <div class="col-lg-8">
-        <div class="alert alert-success">
-          <i class="bi bi-wifi me-2"></i><strong>Online only.</strong> Need help now?
-          <a href="chat.html" class="alert-link">Website chat</a> or
-          <a href="#" class="alert-link" id="consultWhatsapp">WhatsApp</a>.
+        <div class="pro-card p-4 mb-3">
+          <div class="row text-center g-3 mb-3">
+            <div class="col-4"><i class="bi bi-person-badge fs-2 text-primary"></i><div class="small mt-1">Doctor assigned</div></div>
+            <div class="col-4"><i class="bi bi-credit-card fs-2 text-primary"></i><div class="small mt-1">Pay consultation fee</div></div>
+            <div class="col-4"><i class="bi bi-calendar-check fs-2 text-primary"></i><div class="small mt-1">Next follow-up</div></div>
+          </div>
         </div>
-        <div class="form-card">
+        <div class="pro-card p-4">
           <form id="consultationForm">
             <input type="hidden" id="mode" value="online">
             <div class="mb-3">
-              <label for="name" class="form-label">Full Name</label>
-              <input type="text" class="form-control" id="name" required placeholder="Enter your full name">
+              <label for="name" class="form-label">Full name</label>
+              <input type="text" class="form-control" id="name" required>
             </div>
             <div class="mb-3">
-              <label for="phone" class="form-label">Phone Number</label>
-              <input type="tel" class="form-control" id="phone" required placeholder="10-digit mobile number">
+              <label for="phone" class="form-label">Phone</label>
+              <input type="tel" class="form-control" id="phone" required placeholder="10-digit mobile">
             </div>
             <div class="mb-3">
-              <label for="problem" class="form-label">Health Problem</label>
-              <textarea class="form-control" id="problem" rows="4" required placeholder="Describe your symptoms or concern"></textarea>
+              <label for="problem" class="form-label">Health concern</label>
+              <textarea class="form-control" id="problem" rows="4" required></textarea>
             </div>
-            <div class="mb-4">
-              <label for="date" class="form-label">Preferred Date (online session)</label>
+            <div class="mb-3">
+              <label for="date" class="form-label">Preferred date</label>
               <input type="date" class="form-control" id="date" required>
             </div>
+            <div class="mb-3 p-3 bg-light rounded">
+              <label class="form-label fw-semibold">Consultation fee payment</label>
+              <div class="payment-options">
+                <label class="payment-option"><input type="radio" name="consultPayment" value="UPI" checked><span>UPI / Online</span></label>
+                <label class="payment-option"><input type="radio" name="consultPayment" value="COD"><span>Pay before session (COD)</span></label>
+                <label class="payment-option"><input type="radio" name="consultPayment" value="CARD"><span>Card</span></label>
+              </div>
+              <div class="form-check mt-2">
+                <input class="form-check-input" type="checkbox" id="payConsultNow" checked>
+                <label class="form-check-label" for="payConsultNow">Mark consultation fee as paid now (demo)</label>
+              </div>
+            </div>
             <button type="submit" class="btn btn-primary w-100 btn-lg">
-              <i class="bi bi-camera-video me-2"></i>Book Online Consultation
+              <i class="bi bi-check-circle me-2"></i>Book &amp; pay consultation
             </button>
           </form>
         </div>
@@ -64,25 +74,12 @@
     </div>
   </main>
 
-  <footer class="footer">
-    <div class="container text-center">
-      <p class="mb-0">&copy; 2026 GSR Homeo Care Centre</p>
-    </div>
-  </footer>
+  <footer class="footer"><div class="container text-center"><p class="mb-0">&copy; 2026 GSR Homeo Care Centre</p></div></footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="js/nav.js"></script>
   <script src="js/config.js"></script>
   <script src="js/script.js"></script>
   <script src="js/auth.js"></script>
-  <script>
-    document.getElementById("consultWhatsapp")?.addEventListener("click", (e) => {
-      e.preventDefault();
-      if (window.GSR_CONTACT) {
-        const t = encodeURIComponent("Hello GSR Homeo Care Centre, I want to book an online consultation.");
-        window.open(`${window.GSR_CONTACT.whatsapp}?text=${t}`, "_blank");
-      }
-    });
-  </script>
 </body>
 </html>

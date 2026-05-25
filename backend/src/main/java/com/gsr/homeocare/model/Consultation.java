@@ -24,6 +24,12 @@ public class Consultation extends BaseDocument {
     @NotNull(message = "Consultation date is required")
     private LocalDate date;
 
+    private String doctorName;
+    private Double consultationFee;
+    private String paymentMethod;
+    private PaymentStatus paymentStatus = PaymentStatus.Pending;
+    private LocalDate nextFollowUpDate;
+
     public Consultation() {
     }
 
@@ -65,5 +71,45 @@ public class Consultation extends BaseDocument {
 
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    public String getDoctorName() {
+        return doctorName;
+    }
+
+    public void setDoctorName(String doctorName) {
+        this.doctorName = doctorName;
+    }
+
+    public Double getConsultationFee() {
+        return consultationFee;
+    }
+
+    public void setConsultationFee(Double consultationFee) {
+        this.consultationFee = consultationFee;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public PaymentStatus getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(PaymentStatus paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public LocalDate getNextFollowUpDate() {
+        return nextFollowUpDate;
+    }
+
+    public void setNextFollowUpDate(LocalDate nextFollowUpDate) {
+        this.nextFollowUpDate = nextFollowUpDate;
     }
 }

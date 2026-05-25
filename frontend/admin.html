@@ -4,158 +4,143 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
-  <title>Admin Panel | GSR Homeo Care Centre</title>
+  <title>Clinic Admin | GSR Homeo Care Centre</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
   <link href="css/style.css" rel="stylesheet">
 </head>
-<body data-require-admin="true">
-  <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+<body data-require-admin="true" class="admin-body">
+  <nav class="navbar navbar-expand-lg navbar-light sticky-top pro-navbar">
     <div class="container">
       <a class="navbar-brand" href="index.html">GSR</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto align-items-lg-center"></ul>
-      </div>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
+      <div class="collapse navbar-collapse" id="navbarNav"><ul class="navbar-nav ms-auto align-items-lg-center"></ul></div>
     </div>
   </nav>
 
-  <div class="page-header">
+  <header class="page-hero page-hero-admin">
     <div class="container">
-      <h1 class="section-title mb-0">Admin Panel</h1>
-      <p class="text-muted mb-0">Staff only — manage medicines, orders, and consultations</p>
+      <h1 class="page-hero-title"><i class="bi bi-hospital me-2"></i>Clinic Admin Panel</h1>
+      <p class="page-hero-sub mb-0">Patients · prescriptions · orders · follow-ups · feedback</p>
     </div>
-  </div>
+  </header>
 
   <main class="container pb-5">
-    <section class="admin-section">
-      <h3 class="section-title">Add Medicine</h3>
-      <div class="form-card">
-        <form id="adminProductForm">
-          <div class="row g-3">
-            <div class="col-md-6">
-              <label for="productMedicineId" class="form-label">Medicine ID</label>
-              <input type="text" class="form-control" id="productMedicineId" required placeholder="e.g. MED-ARNICA-30C">
-            </div>
-            <div class="col-md-6">
-              <label for="productName" class="form-label">Description name (optional)</label>
-              <input type="text" class="form-control" id="productName" placeholder="Short label for staff">
-            </div>
-            <div class="col-md-6">
-              <label for="productPrice" class="form-label">Price (₹)</label>
-              <input type="number" class="form-control" id="productPrice" required min="0.01" step="0.01">
-            </div>
-            <div class="col-12">
-              <label for="productDescription" class="form-label">Description</label>
-              <textarea class="form-control" id="productDescription" rows="3"></textarea>
-            </div>
-            <div class="col-12">
-              <label for="productUsage" class="form-label">Usage instructions</label>
-              <textarea class="form-control" id="productUsage" rows="2" placeholder="e.g. 4 drops under tongue, 3 times daily"></textarea>
-            </div>
-            <div class="col-12">
-              <label for="productImage" class="form-label">Image URL</label>
-              <input type="url" class="form-control" id="productImage" placeholder="https://example.com/image.jpg">
-            </div>
-            <div class="col-12">
-              <button type="submit" class="btn btn-primary">
-                <i class="bi bi-plus-circle me-2"></i>Add Medicine
-              </button>
-            </div>
-          </div>
-        </form>
-      </div>
-    </section>
+    <ul class="nav nav-pills admin-tabs mb-4 flex-wrap" role="tablist">
+      <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tabPatients">Patients</button></li>
+      <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tabRx">Prescriptions</button></li>
+      <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tabOrders">Orders</button></li>
+      <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tabConsult">Consultations</button></li>
+      <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tabFollow">Follow-ups</button></li>
+      <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tabFeedback">Feedback</button></li>
+      <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tabMedicines">Medicines</button></li>
+      <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tabChat">Chat</button></li>
+    </ul>
 
-    <section class="admin-section" id="adminChatSection">
-      <h3 class="section-title">Online Chat (Admin)</h3>
-      <p class="text-muted small">Reply on website chat. Use WhatsApp button to message customer on phone.</p>
-      <div class="row g-3">
-        <div class="col-md-4">
-          <div id="adminChatInbox"><p class="text-muted">Loading chats…</p></div>
-        </div>
-        <div class="col-md-8">
-          <div id="adminChatThread" class="form-card p-3">
-            <p class="text-muted mb-0">Select a customer phone to view messages.</p>
-          </div>
+    <div class="tab-content">
+      <div class="tab-pane fade show active" id="tabPatients">
+        <div id="adminPatientsList" class="pro-card p-3 mb-3"></div>
+        <div id="adminPatientDetail" class="pro-card p-4 d-none"></div>
+      </div>
+
+      <div class="tab-pane fade" id="tabRx">
+        <div class="pro-card p-4 mb-4">
+          <h5 class="pro-section-title">Add prescription</h5>
+          <form id="adminPrescriptionForm">
+            <div class="row g-3 mb-3">
+              <div class="col-md-4"><label class="form-label">Patient phone</label><input class="form-control" id="rxPatientPhone" required></div>
+              <div class="col-md-4"><label class="form-label">Patient name</label><input class="form-control" id="rxPatientName" required></div>
+              <div class="col-md-4"><label class="form-label">Doctor</label><input class="form-control" id="rxDoctorName" placeholder="Dr. GSR Teja"></div>
+            </div>
+            <label class="form-label">Medicines &amp; how to use</label>
+            <div id="rxMedicineLines"></div>
+            <button type="button" class="btn btn-sm btn-outline-primary mb-3" id="btnAddRxLine">+ Add medicine</button>
+            <div class="mb-3"><label class="form-label">Notes</label><textarea class="form-control" id="rxNotes" rows="2"></textarea></div>
+            <button type="submit" class="btn btn-primary">Save prescription</button>
+          </form>
         </div>
       </div>
-    </section>
 
-    <section class="admin-section">
-      <h3 class="section-title">Manage Medicines</h3>
-      <p class="text-muted small">Delete medicines you no longer sell. Customers only see what remains.</p>
-      <div id="adminMedicinesList">
-        <p class="text-muted">Loading medicines...</p>
-      </div>
-    </section>
-
-    <section class="admin-section">
-      <h3 class="section-title">Update Order Status</h3>
-      <div class="form-card">
-        <form id="adminOrderForm">
-          <div class="row g-3 align-items-end">
-            <div class="col-md-4">
-              <label for="updateOrderId" class="form-label">Order ID</label>
-              <input type="text" class="form-control" id="updateOrderId" required placeholder="MongoDB order ID">
+      <div class="tab-pane fade" id="tabOrders">
+        <div class="pro-card p-4 mb-4">
+          <h5 class="pro-section-title">Update order status</h5>
+          <form id="adminOrderForm">
+            <div class="row g-3 align-items-end">
+              <div class="col-md-4"><label class="form-label">Order ID</label><input class="form-control" id="updateOrderId" required></div>
+              <div class="col-md-4">
+                <label class="form-label">Status</label>
+                <select class="form-select" id="orderStatus" required>
+                  <option value="Ordered">Order placed</option>
+                  <option value="Processing">Processing</option>
+                  <option value="Shipped">Shipped</option>
+                  <option value="OutForDelivery">Out for delivery</option>
+                  <option value="Delivered">Delivered</option>
+                  <option value="Closed">Closed</option>
+                </select>
+              </div>
+              <div class="col-md-4"><button type="submit" class="btn btn-primary w-100">Update</button></div>
             </div>
-            <div class="col-md-4">
-              <label for="orderStatus" class="form-label">Status</label>
-              <select class="form-select" id="orderStatus" required>
-                <option value="Ordered">Ordered</option>
-                <option value="Processing">Processing</option>
-                <option value="Shipped">Shipped</option>
-                <option value="Delivered">Delivered</option>
-              </select>
-            </div>
-            <div class="col-md-4">
-              <button type="submit" class="btn btn-primary w-100">
-                <i class="bi bi-arrow-repeat me-2"></i>Update Status
-              </button>
-            </div>
-          </div>
-        </form>
+          </form>
+        </div>
+        <div id="adminOrdersList"></div>
       </div>
-    </section>
 
-    <section class="admin-section">
-      <h3 class="section-title">All Orders</h3>
-      <div id="adminOrdersList">
-        <p class="text-muted">Loading orders...</p>
+      <div class="tab-pane fade" id="tabConsult">
+        <div class="table-responsive pro-card p-3">
+          <table class="table table-hover mb-0">
+            <thead><tr><th>ID</th><th>Name</th><th>Phone</th><th>Problem</th><th>Doctor</th><th>Fee</th><th>Pay</th><th>Date</th><th>Next F/U</th><th></th></tr></thead>
+            <tbody id="consultationsTableBody"><tr><td colspan="10" class="text-muted">Loading…</td></tr></tbody>
+          </table>
+        </div>
       </div>
-    </section>
 
-    <section class="admin-section">
-      <h3 class="section-title">Consultation Bookings</h3>
-      <div class="table-responsive">
-        <table class="table table-hover mb-0">
-          <thead class="table-success">
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Phone</th>
-              <th>Problem</th>
-              <th>Mode</th>
-              <th>Date</th>
-            </tr>
-          </thead>
-          <tbody id="consultationsTableBody">
-            <tr>
-              <td colspan="6" class="text-center text-muted">Loading consultations...</td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="tab-pane fade" id="tabFollow">
+        <div class="pro-card p-4 mb-4">
+          <h5 class="pro-section-title">Schedule follow-up</h5>
+          <form id="adminFollowUpForm">
+            <div class="row g-3">
+              <div class="col-md-3"><input class="form-control" id="fuPhone" placeholder="Phone" required></div>
+              <div class="col-md-3"><input class="form-control" id="fuName" placeholder="Name" required></div>
+              <div class="col-md-3"><input class="form-control" id="fuDoctor" placeholder="Doctor" required></div>
+              <div class="col-md-3"><input type="date" class="form-control" id="fuDate" required></div>
+              <div class="col-12"><input class="form-control" id="fuNotes" placeholder="Notes"></div>
+              <div class="col-12"><button type="submit" class="btn btn-primary">Schedule</button></div>
+            </div>
+          </form>
+        </div>
+        <div id="adminFollowupsList"></div>
       </div>
-    </section>
+
+      <div class="tab-pane fade" id="tabFeedback">
+        <div id="adminFeedbackList"></div>
+      </div>
+
+      <div class="tab-pane fade" id="tabMedicines">
+        <div class="pro-card p-4 mb-4">
+          <form id="adminProductForm">
+            <div class="row g-3">
+              <div class="col-md-6"><label class="form-label">Medicine ID</label><input class="form-control" id="productMedicineId" required></div>
+              <div class="col-md-6"><label class="form-label">Label</label><input class="form-control" id="productName"></div>
+              <div class="col-md-4"><label class="form-label">Price ₹</label><input type="number" class="form-control" id="productPrice" required min="0.01" step="0.01"></div>
+              <div class="col-12"><label class="form-label">How to use (for patients)</label><textarea class="form-control" id="productUsage" rows="2"></textarea></div>
+              <div class="col-12"><label class="form-label">Description</label><textarea class="form-control" id="productDescription" rows="2"></textarea></div>
+              <div class="col-12"><button type="submit" class="btn btn-primary">Add medicine</button></div>
+            </div>
+          </form>
+        </div>
+        <div id="adminMedicinesList"></div>
+      </div>
+
+      <div class="tab-pane fade" id="tabChat">
+        <div class="row g-3" id="adminChatSection">
+          <div class="col-md-4"><div id="adminChatInbox" class="pro-card p-3"></div></div>
+          <div class="col-md-8"><div id="adminChatThread" class="pro-card p-3"><p class="text-muted mb-0">Select a chat.</p></div></div>
+        </div>
+      </div>
+    </div>
   </main>
 
-  <footer class="footer">
-    <div class="container text-center">
-      <p class="mb-0">&copy; 2026 GSR Homeocare System</p>
-    </div>
-  </footer>
+  <footer class="footer"><div class="container text-center"><p class="mb-0">&copy; 2026 GSR Homeocare Admin</p></div></footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="js/nav.js"></script>
@@ -163,5 +148,6 @@
   <script src="js/script.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/chat.js"></script>
+  <script src="js/clinic.js"></script>
 </body>
 </html>

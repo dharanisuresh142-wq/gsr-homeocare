@@ -1,7 +1,5 @@
 /**
  * GSR Homeocare — API URL config
- * Local: uses your PC IP or localhost
- * Live: uses Render backend (permanent public link)
  */
 (function () {
   const LIVE_API = "https://gsr-homeocare-api.onrender.com/api";
@@ -25,5 +23,12 @@
     whatsapp: "https://wa.me/919948054618",
     email: "teja.gd@gmail.com",
     mailto: "mailto:teja.gd@gmail.com",
+  };
+
+  window.GSR_CLINIC = {
+    name: "GSR Homeo Care Centre",
+    tagline: "Expert Online Homeopathic Consultation",
+    defaultDoctor: "Dr. GSR Teja",
+    consultationFee: 500,
   };
 })();

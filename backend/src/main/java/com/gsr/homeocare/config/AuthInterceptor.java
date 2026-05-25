@@ -48,15 +48,7 @@ public class AuthInterceptor implements HandlerInterceptor {
             throw new ForbiddenException("Admin access required");
         }
 
-        if (path.startsWith("/api/orders") && "GET".equals(method)) {
-            String phone = request.getParameter("phone");
-            if (phone != null && !phone.isBlank() && session.getRole() == UserRole.CUSTOMER) {
-                String normalized = phone.replaceAll("\\s+", "").trim();
-                if (session.getPhone() != null && !session.getPhone().equals(normalized)) {
-                    throw new ForbiddenException("You can only view your own orders");
-                }
-            }
-        }
+        enforceCustomerPhoneScope(path, method, request, session);
 
         return true;
     }
@@ -64,6 +56,20 @@ public class AuthInterceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         AuthContext.clear();
+    }
+
+    private void enforceCustomerPhoneScope(String path, String method, HttpServletRequest request, AuthSession session) {
+        if (session.getRole() != UserRole.CUSTOMER || session.getPhone() == null) {
+            return;
+        }
+        String customerPhone = session.getPhone().replaceAll("\\s+", "").trim();
+        String phoneParam = request.getParameter("phone");
+        if (phoneParam != null && !phoneParam.isBlank()) {
+            String normalized = phoneParam.replaceAll("\\s+", "").trim();
+            if (!customerPhone.equals(normalized)) {
+                throw new ForbiddenException("You can only access your own records");
+            }
+        }
     }
 
     private boolean isPublic(String path, String method) {
@@ -76,7 +82,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         if (path.startsWith("/api/orders") && "POST".equals(method)) {
             return true;
         }
-        if (path.startsWith("/api/consultations") && "POST".equals(method)) {
+        if (path.startsWith("/api/consultations") && ("POST".equals(method))) {
             return true;
         }
         if (path.startsWith("/api/chat") && "POST".equals(method)) {
@@ -88,6 +94,9 @@ public class AuthInterceptor implements HandlerInterceptor {
         if (path.startsWith("/api/orders/") && "GET".equals(method)) {
             return true;
         }
+        if (path.startsWith("/api/feedback") && "POST".equals(method)) {
+            return true;
+        }
         return false;
     }
 
@@ -95,7 +104,32 @@ public class AuthInterceptor implements HandlerInterceptor {
         if (path.startsWith("/api/products") && ("POST".equals(method) || "DELETE".equals(method))) {
             return true;
         }
+        if (path.startsWith("/api/patients")) {
+            return true;
+        }
+        if (path.startsWith("/api/prescriptions") && "POST".equals(method)) {
+            return true;
+        }
+        if (path.startsWith("/api/prescriptions") && "GET".equals(method)) {
+            String phone = request.getParameter("phone");
+            return phone == null || phone.isBlank();
+        }
+        if (path.startsWith("/api/followups") && ("POST".equals(method) || "PUT".equals(method))) {
+            return true;
+        }
+        if (path.startsWith("/api/followups") && "GET".equals(method)) {
+            String phone = request.getParameter("phone");
+            return phone == null || phone.isBlank();
+        }
+        if (path.startsWith("/api/feedback") && "GET".equals(method)) {
+            String phone = request.getParameter("phone");
+            return phone == null || phone.isBlank();
+        }
         if (path.startsWith("/api/consultations") && "GET".equals(method)) {
+            String phone = request.getParameter("phone");
+            return phone == null || phone.isBlank();
+        }
+        if (path.startsWith("/api/consultations") && "PUT".equals(method)) {
             return true;
         }
         if (path.startsWith("/api/orders") && "PUT".equals(method)) {

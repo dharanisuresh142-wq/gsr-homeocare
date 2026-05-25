@@ -1,5 +1,18 @@
 const API_BASE_URL = window.GSR_API_BASE;
 
+const ORDER_STATUS_LABELS = {
+  Ordered: "Order placed",
+  Processing: "Processing",
+  Shipped: "Shipped",
+  OutForDelivery: "Out for delivery",
+  Delivered: "Delivered",
+  Closed: "Closed",
+};
+
+function orderStatusLabel(s) {
+  return ORDER_STATUS_LABELS[s] || s;
+}
+
 let cart = JSON.parse(localStorage.getItem("gsrCart") || "[]");
 
 function getCartCount() {
@@ -233,7 +246,7 @@ function renderOrderCard(order, showPhone = false) {
     <div class="info-card p-4 mb-3">
       <div class="d-flex justify-content-between flex-wrap gap-2 mb-2">
         <h5 class="mb-0">Order #${order.id}</h5>
-        <span class="status-badge status-${order.status}">${order.status}</span>
+        <span class="status-badge status-${order.status}">${orderStatusLabel(order.status)}</span>
       </div>
       <p class="mb-1"><strong>Date:</strong> ${formatDate(order.createdAt)}</p>
       ${showPhone ? `<p class="mb-1"><strong>Customer:</strong> ${escapeHtml(order.customerName)} (${escapeHtml(order.phone)})</p>` : ""}
@@ -362,21 +375,40 @@ function setupConsultationForm() {
   const form = document.getElementById("consultationForm");
   if (!form) return;
   const dateInput = document.getElementById("date");
+  const feeEl = document.getElementById("consultationFeeDisplay");
+  const doctorEl = document.getElementById("doctorNameDisplay");
+  const clinic = window.GSR_CLINIC || { consultationFee: 500, defaultDoctor: "Dr. GSR Teja" };
+  if (feeEl) feeEl.textContent = `₹${clinic.consultationFee}`;
+  if (doctorEl) doctorEl.textContent = clinic.defaultDoctor;
   if (dateInput) dateInput.min = new Date().toISOString().split("T")[0];
+
+  const user = typeof getAuthUser === "function" ? getAuthUser() : null;
+  const nameInput = document.getElementById("name");
+  const phoneInput = document.getElementById("phone");
+  if (user?.name && nameInput) nameInput.value = user.name;
+  if (user?.phone && phoneInput) phoneInput.value = user.phone;
+
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
+    const payNow = document.getElementById("payConsultNow")?.checked ?? true;
+    const paymentMethod = document.querySelector('input[name="consultPayment"]:checked')?.value || "UPI";
     try {
-      const result = await apiRequest("/consultations", {
+      const result = await apiRequest("/consultations/book", {
         method: "POST",
         body: JSON.stringify({
           name: document.getElementById("name").value.trim(),
           phone: document.getElementById("phone").value.trim(),
           problem: document.getElementById("problem").value.trim(),
-          mode: "online",
           date: document.getElementById("date").value,
+          doctorName: clinic.defaultDoctor,
+          consultationFee: clinic.consultationFee,
+          paymentMethod,
+          payNow,
         }),
       });
-      showAlert(`Online consultation booked! Reference: <strong>#${result.id}</strong>`);
+      localStorage.setItem("gsrPhone", document.getElementById("phone").value.trim());
+      const payMsg = result.paymentStatus === "Paid" ? "Consultation fee marked paid." : "Pay fee at clinic / before session.";
+      showAlert(`Booked with <strong>${escapeHtml(result.doctorName)}</strong>! Ref <strong>#${result.id}</strong>. ${payMsg}`);
       form.reset();
     } catch (error) {
       showAlert(error.message, "danger");
@@ -401,18 +433,7 @@ function setupTrackingForm() {
   });
 }
 
-async function loadConsultationsAdmin() {
-  const tableBody = document.getElementById("consultationsTableBody");
-  if (!tableBody) return;
-  try {
-    const consultations = await apiRequest("/consultations");
-    tableBody.innerHTML = consultations.length
-      ? consultations.map((c) => `<tr><td>${c.id}</td><td>${escapeHtml(c.name)}</td><td>${c.phone}</td><td>${escapeHtml(c.problem)}</td><td><span class="badge bg-success">Online</span></td><td>${c.date}</td></tr>`).join("")
-      : '<tr><td colspan="6" class="text-center text-muted">No consultations.</td></tr>';
-  } catch (error) {
-    tableBody.innerHTML = `<tr><td colspan="6" class="text-danger">${error.message}</td></tr>`;
-  }
-}
+/* loadConsultationsAdmin defined in clinic.js for admin panel */
 
 async function loadAdminMedicines() {
   const container = document.getElementById("adminMedicinesList");

@@ -15,4 +15,6 @@ public interface OrderRepository extends MongoRepository<Order, String> {
     List<Order> findByOrganizationIdOrderByCreatedAtDesc(String organizationId);
 
     List<Order> findByPhoneAndOrganizationIdOrderByCreatedAtDesc(String phone, String organizationId);
+
+    List<Order> findByOrganizationIdAndPhoneOrderByCreatedAtDesc(String organizationId, String phone);
 }
